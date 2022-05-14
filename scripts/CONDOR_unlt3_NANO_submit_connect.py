@@ -10,13 +10,13 @@ home = os.environ['HOME']
 RUN_DIR = pwd
 TEMP = pwd
 jobEXE  = "execute_script.sh"
-#EXE  = "MakeReducedNtuple_NANO.x"
-EXE  = "MakeEventCount_NANO.x"
+EXE  = "MakeReducedNtuple_NANO.x"
+#EXE  = "MakeEventCount_NANO.x"
 RESTFRAMES = './scripts/setup_RestFrames_connect.sh'
 CMSSW_SETUP = './scripts/cmssw_setup_connect.sh'
 TREE = "Events"
 USER = os.environ['USER']
-OUT  = "/uscms/home/"+USER+"/nobackup/NTUPLES/EventCount"
+OUT  = "/uscms/home/"+USER+"/nobackup/NTUPLES/Processing"
 LIST = "default.list"
 QUEUE = ""
 MAXN = 1
@@ -89,7 +89,7 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
     #fsrc.write('+RequiresCVMFS = True \n')
     #fsrc.write('+RequiresSharedFS = True \n')
 
-    transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/stash/user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+    transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/uscms/home/z374f439/nobackup/whatever_you_want/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
     fsrc.write(transfer_input)
 
     fsrc.write('should_transfer_files = YES\n')
