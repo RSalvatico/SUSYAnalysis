@@ -85,7 +85,7 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
     fsrc.write('error = '+errlog+" \n")
     fsrc.write('log = '+loglog+" \n")
     fsrc.write('Requirements = (Machine != "red-node000.unl.edu")\n')
-    fsrc.write('request_memory = 2 GB \n')
+    fsrc.write('request_memory = 4 GB \n')
     #fsrc.write('+RequiresCVMFS = True \n')
     #fsrc.write('+RequiresSharedFS = True \n')
 

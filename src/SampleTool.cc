@@ -386,8 +386,8 @@ void SampleTool::InitProcMap(){
     InitSMS("TSlepSlep", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_mSlep-500To1300_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 2.77, true);
     InitSMS("TSlepSlep", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 2.77, true);
 
-    InitSMS("N2C1", m_Path+"Summer16_102X_SMS/SMS-N2C1-higgsino_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1, true);
-    //InitSMS("N2C1", m_Path+"Summer16_102X_SMS/", 1, true);
+    InitSMS("N2C1", m_Path+"Summer16_102X_SMS/SMS-N2C1-higgsino_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 0.1011, true); //Only Z to leptons
+    InitSMS("N2C1", m_Path+"Summer16_102X_SMS/SMS-N2C1-higgsino_mN2-260to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 0.1011, true);
 
     //InitSMS("T2bb", m_Path+"Summer16_102X_SMS/SMS-T2bb_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1., true);
 
@@ -566,8 +566,8 @@ void SampleTool::InitProcMap(){
     InitSMS("TSlepSlep", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_mSlep-500To1300_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2.77, true);
     InitSMS("TSlepSlep", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2.77, true);
 
-    InitSMS("N2C1", m_Path+"Fall17_102X_SMS/SMS-N2C1-higgsino_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1, true);
-    //InitSMS("N2C1", m_Path+"Fall17_102X_SMS/SMS-N2C1-higgsino_mN2-260to500_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1, true);
+    InitSMS("N2C1", m_Path+"Fall17_102X_SMS/SMS-N2C1-higgsino_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 0.1011, true);
+    InitSMS("N2C1", m_Path+"Fall17_102X_SMS/SMS-N2C1-higgsino_mN2-260to500_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 0.1011, true);
 
     InitSMS("T2bb", m_Path+"Fall17_102X_SMS/SMS-T2bb_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
 
@@ -774,8 +774,9 @@ void SampleTool::InitProcMap(){
     InitSMS("TSlepSlep", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_mSlep-500To1300_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 2.77, true);
     InitSMS("TSlepSlep", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 2.77, true);
 
-    InitSMS("N2C1", m_Path+"Autumn18_102X_SMS/SMS-N2C1-higgsino_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1, true);
-    //InitSMS("N2C1", m_Path+"Autumn18_102X_SMS/", 1, true);
+    InitSMS("N2C1", m_Path+"Autumn18_102X_SMS/SMS-N2C1-higgsino_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 0.1011, true);
+    InitSMS("N2C1", m_Path+"Autumn18_102X_SMS/SMS-N2C1-higgsino_mN2-260to500_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 0.1011, true);
+    InitSMS("N2toC1W", m_Path+"Autumn18_102X_SMS/SMS-N2toC1W-higgsino_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1., true);
 
     //InitSMS("T2bb", m_Path+"Autumn18_102X_SMS/SMS-T2bb_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1., true);
 

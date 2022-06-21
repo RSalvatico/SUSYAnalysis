@@ -645,9 +645,9 @@ TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
     if(ptype == kTChiWZ)
       xsec = g_Xsec.GetXsec_SMS("TChiWZ", MP);
     if(ptype == kN2C1){
-      xsec = g_Xsec.GetXsec_SMS("N2C1", MP);
-      cout << MP << ": " << xsec << endl;
-      cout << "Content: " << hist->GetBinContent(x+1,1) << endl;
+      xsec = g_Xsec.GetXsec_SMS("N2C1", MP)*0.1011;
+      //cout << MP << ": " << xsec << endl;
+      //cout << "Content: " << hist->GetBinContent(x+1,1) << endl;
     }
     if(ptype == kT2tt)
       xsec = g_Xsec.GetXsec_SMS("T2tt", MP);
@@ -658,11 +658,11 @@ TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
     if(ptype == kTSlSl)
       xsec = g_Xsec.GetXsec_SMS("TSlepSlep", MP);
     
-    // for(int y = 0; y < Ny; y++){
-    //   if(hist->GetBinContent(x+1,y+1) > 0.){
-    // 	hist->SetBinContent(x+1,y+1, hist->GetBinContent(x+1,y+1)*xsec);
-    //   }
-    // }
+    for(int y = 0; y < Ny; y++){
+      if(hist->GetBinContent(x+1,y+1) > 0.){
+    	hist->SetBinContent(x+1,y+1, hist->GetBinContent(x+1,y+1)*xsec);
+      }
+    }
   }
   
   hist->GetXaxis()->CenterTitle();
@@ -788,8 +788,8 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
     if(ptype == kTChiWZ)
       xsec = g_Xsec.GetXsec_SMS("TChiWZ", MP);
     if(ptype == kN2C1){
-      xsec = g_Xsec.GetXsec_SMS("N2C1", MP);
-      cout << MP << ": " << xsec << endl;
+      xsec = g_Xsec.GetXsec_SMS("N2C1", MP)*0.1011;
+      //cout << MP << ": " << xsec << endl;
     }
     if(ptype == kT2tt)
       xsec = g_Xsec.GetXsec_SMS("T2tt", MP);
@@ -800,11 +800,11 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
     if(ptype == kTSlSl)
       xsec = g_Xsec.GetXsec_SMS("TSlepSlep", MP);
     
-    // for(int y = 0; y < Ny; y++){
-    //   if(hist->GetBinContent(x+1,y+1) > 0.){
-    // 	hist->SetBinContent(x+1,y+1, hist->GetBinContent(x+1,y+1)*xsec);
-    //   }
-    // }
+    for(int y = 0; y < Ny; y++){
+      if(hist->GetBinContent(x+1,y+1) > 0.){
+    	hist->SetBinContent(x+1,y+1, hist->GetBinContent(x+1,y+1)*xsec);
+      }
+    }
   }
   
   hist->GetXaxis()->CenterTitle();
