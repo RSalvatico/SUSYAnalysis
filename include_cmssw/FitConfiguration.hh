@@ -11,7 +11,7 @@
 #include "CombineHarvester/CombineTools/interface/Utilities.h"
 #include "CombineHarvester/CombineTools/interface/Systematics.h"
 #include "CombineHarvester/CombineTools/interface/BinByBin.h"
-
+using ch::syst::SystMapFunc;
 ///////////////////////////////////////////
 ////////// FitConfiguration class
 ///////////////////////////////////////////
@@ -22,7 +22,18 @@ public:
   virtual ~FitConfiguration() {}
 
   void Configure(ch::CombineHarvester& cb, ProcessList& processes);
-   
+
+  void AddFloatingNorms(VS& float_procs, ch::CombineHarvester& cb, ProcessList& all_procs);
+  void AddRareNorms(VS& rare_procs, double uncert, ch::CombineHarvester& cb, ProcessList& all_procs);
+
+  void AddCommonSys(ch::CombineHarvester& cb, ProcessList& processes);
+  void AddFakeLeptonSys(ch::CombineHarvester& cb, ProcessList& processes);
+  void AddSVSys(ch::CombineHarvester& cb, ProcessList& processes);
+  void AddKinematicSys(ch::CombineHarvester& cb, ProcessList& processes);
+  void AddSJetNormSys(const string& label, VS& procs, ch::CombineHarvester& cb, ProcessList& processes);
+
+  void AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarvester& cb, FitReader& FIT);
+  
 };
 
 
