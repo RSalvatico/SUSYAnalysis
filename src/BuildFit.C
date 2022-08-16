@@ -343,8 +343,8 @@ int main(int argc, char* argv[]) {
   //CONFIG.Configure(cb, processes);
 
   VS bkg_rate;
-  bkg_rate += "ttbar";
-  bkg_rate += "Wjets";
+//  bkg_rate += "ttbar"; //removing for ttbar hierarchy testing
+//  bkg_rate += "Wjets"; //removing scale wjets for hierarchy
   bkg_rate += "ZDY";
   bkg_rate += "QCD";
   bkg_rate += "DB";
@@ -360,21 +360,50 @@ int main(int argc, char* argv[]) {
   CONFIG.AddSVSys(cb, processes);
   CONFIG.AddKinematicSys(cb, processes);
 
-  VS Wjets;
+  VS Wjets; //removing norm wjets for hierarchy leave VS for later hier call
   Wjets += "Wjets";
-  CONFIG.AddSJetNormSys("Wjets", Wjets, cb, processes);
+  SystDict sm;
+  CONFIG.initSystDict(sm);
+  CONFIG.AddNormHierarchy( sm, Wjets, cb,processes) ;
+//  cb.PrintSysts();
+//   CONFIG.AddSJetNormSys("Wjets", Wjets, cb, processes);
+
+
+
+  VS ttbar;
+  ttbar += "ttbar";
+   CONFIG.AddNormHierarchy( sm, ttbar, cb, processes) ;
+   CONFIG.AddSJetNormSys("ttbar", ttbar, cb, processes);
+
   VS QCD;
   QCD += "QCD";
   CONFIG.AddSJetNormSys("QCD", QCD, cb, processes);
+
+/*
   VS Other;
   Other += "ttbar";
   Other += "ZDY";
   Other += "DB";
   Other += "ST";
   Other += "TB";
-  CONFIG.AddSJetNormSys("Other", Other, cb, processes);
-  
-  using ch::syst::SystMap;
+//  CONFIG.AddNormHierarchy( sm, Other, cb, processes);
+CONFIG.AddSJetNormSys("Other", Other, cb, processes); 
+//CONFIG.AddSJetNormSys("Rare", bkg_rare, cb, processes);
+*/
+
+
+ VS ZDYDB;
+ ZDYDB += "ZDY";
+ ZDYDB += "DB";
+ CONFIG.AddSJetNormSys("ZDYDB", ZDYDB, cb, processes);
+ 
+ VS STTB;
+ STTB += "ST";
+ STTB += "TB";
+ CONFIG.AddSJetNormSys("STTB", STTB, cb, processes);
+ 
+
+ using ch::syst::SystMap;
   using ch::syst::era;
   using ch::syst::channel;
   using ch::syst::bin_id;
@@ -383,8 +412,6 @@ int main(int argc, char* argv[]) {
   SystematicsTool SYS;
   Systematics shapeToNorm = SYS.GetConvertedSystematics();
  
-  
-
  int Nsys = systematics.GetN();
   if(Nsys > 0){
     cout << "+ Adding shape systematics" << endl;

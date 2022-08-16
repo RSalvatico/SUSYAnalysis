@@ -491,7 +491,7 @@ void SampleTool::InitProcMap(){
     Process ttbar("ttbar", kBkg);
     list.clear();
     list += m_Path + "Fall17_102X/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root";
-    //    list += m_Path + "Summer20UL17_102X/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Summer20UL17_102X.root";
+//    list += m_Path + "Summer20UL17_102X/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Summer20UL17_102X.root";
     list += m_Path + "Fall17_102X/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root";
     list += m_Path + "Fall17_102X/TTJets_SingleLeptFromTbar_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root";
     list += m_Path + "Fall17_102X/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_Fall17_102X.root";
@@ -502,7 +502,8 @@ void SampleTool::InitProcMap(){
     list += m_Path + "Fall17_102X/TTZToQQ_TuneCP5_13TeV-amcatnlo-pythia8_Fall17_102X.root";
     list += m_Path + "Fall17_102X/ttHToNonbb_M125_TuneCP5_13TeV-powheg-pythia8_Fall17_102X.root";
     list += m_Path + "Fall17_102X/ttHTobb_M125_TuneCP5_13TeV-powheg-pythia8_Fall17_102X.root";
-    //using only ttjets dilept sample for alice low pt elec analysis
+
+ //using only ttjets dilept sample for alice low pt elec analysis
     m_Proc[m_iYear][ttbar] = pair<vector<string>,string>(list, "KUAnalysis");
 
     Process ST("ST", kBkg);
@@ -644,6 +645,7 @@ void SampleTool::InitProcMap(){
     InitSMS("TChipmWW", m_Path+"Fall17_102X_SMS/SMS-TChipmWW_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
     InitSMS("TChipmWW", m_Path+"Fall17_102X_SMS/SMS-TChipmWW_WWTo2LNu_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true, true);
     InitSMS("TChipmWW", m_Path+"Fall17_102X_SMS/SMS-TChipmWW_dM-3to50_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
+
 
     InitSMS("N2C1nonDeg", m_Path+"Fall17_102X_SMS/SMS-N2C1-higgsino_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 0.1009); //Only Z decays to charged leptons
 
