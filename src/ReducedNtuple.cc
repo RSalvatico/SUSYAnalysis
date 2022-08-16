@@ -655,17 +655,17 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   bool good_PV;
   TVector3 PV = AnalysisBase<Base>::GetPV(good_PV);
 
-  if(!good_PV)
+  if(!good_PV){
     return;
-
+  }
   TVector3 ETMiss;
   ParticleList Jets_noID = AnalysisBase<Base>::GetJetsMET(ETMiss);
   ParticleList Jets      = AnalysisBase<Base>::GetJetsMET(ETMiss, 3); // jet ID 3
   ParticleList GenJets   = AnalysisBase<Base>::GetGenJets();
   
-  if(ETMiss.Mag() < 150.)
+  if(ETMiss.Mag() < 150.){
     return;
-  
+  }
   ClearVariables();
 
   if(Jets_noID.size() != Jets.size())
@@ -804,9 +804,9 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   //   return;
   
   // not enough stuff
-  if(m_Nlep + m_Njet + m_NSV < 2 || m_Njet < 1)
+  if(m_Nlep + m_Njet + m_NSV < 2 || m_Njet < 1){
     return;
-
+  }
   m_HEM_Veto = m_EventFlag_JetInHEM_Pt20;
   for(int l = 0; l < m_Nlep; l++)
     if(AnalysisBase<Base>::IsHEM(Leptons[l]))
@@ -905,9 +905,9 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     }
   }
 
-  if(m_Nlep + m_NSV_S + m_Njet_S < 1)
+  if(m_Nlep + m_NSV_S + m_Njet_S < 1){
     return;
-  
+  }
   // Fill Observable Branches
   
   m_PTCM = CM->GetFourVector().Pt();
@@ -1107,6 +1107,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
 
   if(!AnalysisBase<Base>::IsData()){
     m_weight = AnalysisBase<Base>::GetEventWeight();
+    //std::cout << "This is the weight: " << m_weight << std::endl;
     
     m_PUweight = AnalysisBase<Base>::GetPUWeight(0);
     m_PUweight_up = AnalysisBase<Base>::GetPUWeight(1);

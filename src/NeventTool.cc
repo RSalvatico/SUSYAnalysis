@@ -110,10 +110,12 @@ void NeventTool::Initialize_SMS(const std::string& dataset, const std::string& f
 
   //cout << "Initializing " << dataset << " " << filetag << endl;
   
+
   int N = m_Tree->GetEntries();
   for(int i = 0; i < N; i++){
     m_Tree->GetEntry(i);
-    
+    //std::cout<< "dataset: " << dataset << "  m_dataset:" << *m_dataset << std::endl;
+    //std::cout<< "filetag: " << filetag << "  m_filetag:" << *m_filetag << std::endl;    
     //cout << (*m_dataset) << " " << (*m_filetag) << endl;
 
     //if( (*m_dataset).find("mStop") != string::npos){
@@ -122,11 +124,11 @@ void NeventTool::Initialize_SMS(const std::string& dataset, const std::string& f
     //	cout << m_MP << " " << m_MC << endl << endl;
     //}
     
-
     if((dataset == (*m_dataset)) &&
        (filetag == (*m_filetag))){
 
       std::pair<int,int> masses(m_MP,m_MC);
+      std::cout << "m_MP: " << m_MP << "  m_MC: " << m_MC << std::endl;
       
       if(m_Label2Nevent_SMS[label].count(masses) == 0){
 	m_Label2Nevent_SMS[label][masses] = 0.;
@@ -236,9 +238,10 @@ double NeventTool::GetNweight_SMS(const std::string& dataset, const std::string&
   
   std::pair<int,int> masses(MP,MC);
 
-  if(m_Label2Nweight_SMS[label].count(masses) == 0)
+  if(m_Label2Nweight_SMS[label].count(masses) == 0){
+    std::cout << "because this is zero" << std::endl;
     return 0.;
-  
+  }
   return m_Label2Nweight_SMS[label][masses];
 }
 

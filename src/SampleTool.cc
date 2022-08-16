@@ -75,6 +75,16 @@ bool SampleTool::FilterDilepton(const Process& proc, int itree){
   return m_SProcDL[m_iYear][proc][FileName(proc, itree)];
 }
 
+SleptonFlavor SampleTool::FilterSleptons(const Process& proc, int itree){
+  if(m_SProcInit[m_iYear].count(proc) == 0)
+    return kSmuSel;
+
+  if(!m_SProcInit[m_iYear][proc])
+    InitSignalProc(proc);
+
+  return m_SProcSlepFlavor[m_iYear][proc][FileName(proc, itree)];
+}
+
 double SampleTool::GetSampleWeight(const Process& proc, int itree){
   if(m_SProcInit[m_iYear].count(proc) == 0)
     return 1.;
@@ -190,7 +200,7 @@ int SampleTool::YearMap(int year){
   return ydef;
 }
 
-void SampleTool::InitSMS(const string& prefix, const string& filename, double weight, bool FS, bool DL){
+void SampleTool::InitSMS(const string& prefix, const string& filename, double weight, bool FS, bool DL, SleptonFlavor kFlavor){
   //TFile file;
   //file.Open(filename.c_str(), "READ"); //
   if(gSystem->AccessPathName(filename.c_str())) return;
@@ -217,14 +227,17 @@ void SampleTool::InitSMS(const string& prefix, const string& filename, double we
       m_SProcInit[m_iYear][proc] = false;
       m_SProcFS[m_iYear][proc] = std::map<string,bool>();
       m_SProcDL[m_iYear][proc] = std::map<string,bool>();
+      m_SProcSlepFlavor[m_iYear][proc] = std::map<string,SleptonFlavor>();
       m_SProcW[m_iYear][proc] = std::map<string,double>();
       m_SProcFS[m_iYear][proc][filename] = FS;
       m_SProcDL[m_iYear][proc][filename] = DL;
+      m_SProcSlepFlavor[m_iYear][proc][filename] = kFlavor;
       m_SProcW[m_iYear][proc][filename] = weight;
     } else {
       m_Proc[m_iYear][proc].first.push_back(filename);
       m_SProcFS[m_iYear][proc][filename] = FS;
       m_SProcDL[m_iYear][proc][filename] = DL;
+      m_SProcSlepFlavor[m_iYear][proc][filename] = kFlavor;
       m_SProcW[m_iYear][proc][filename] = weight;
     }
     
@@ -327,6 +340,8 @@ void SampleTool::InitProcMap(){
     list += m_Path + "Summer16_102X/VHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_Summer16_102X.root";
     m_Proc[m_iYear][DB] = pair<vector<string>,string>(list, "KUAnalysis");
 
+
+
     Process Wjets("Wjets", kBkg);
     list.clear();
     list += m_Path + "Summer16_102X/WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root";
@@ -339,12 +354,27 @@ void SampleTool::InitProcMap(){
     list += m_Path + "Summer16_102X/WJetsToLNu_HT-70To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root";
     m_Proc[m_iYear][Wjets] = pair<vector<string>,string>(list, "KUAnalysis");
 
+
+/*
+
+    Process Wjets("Wjets", kBkg);
+    list.clear();
+    list += m_Path + "Summer16_102X/WJetsToLNu_Pt-100To250_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_Summer16_102X.root";
+    list += m_Path + "Summer16_102X/WJetsToLNu_Pt-250To400_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_Summer16_102X.root";
+    list += m_Path + "Summer16_102X/WJetsToLNu_Pt-400To600_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_Summer16_102X.root";
+    list += m_Path + "Summer16_102X/WJetsToLNu_Pt-600ToInf_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_Summer16_102X.root";
+    m_Proc[m_iYear][Wjets] = pair<vector<string>,string>(list, "KUAnalysis");
+*/
+
+
     Process TB("TB", kBkg);
     list.clear();
     list += m_Path + "Summer16_102X/WZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8_Summer16_102X.root";
     list += m_Path + "Summer16_102X/WZG_TuneCUETP8M1_13TeV-amcatnlo-pythia8_Summer16_102X.root";
     list += m_Path + "Summer16_102X/WWZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8_Summer16_102X.root";
     list += m_Path + "Summer16_102X/WWG_TuneCUETP8M1_13TeV-amcatnlo-pythia8_Summer16_102X.root";
+    list += m_Path + "Summer16_102X/ZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8_Summer16_102X.root";
+    list += m_Path + "Summer16_102X/WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8_Summer16_102X.root";
     m_Proc[m_iYear][TB] = pair<vector<string>,string>(list, "KUAnalysis");
   
     Process QCD("QCD", kBkg);
@@ -368,9 +398,9 @@ void SampleTool::InitProcMap(){
     //InitSMS("T2bW", m_Path+"Summer16_102X_SMS/SMS-T2bW_X05_dM-10to80_2Lfilter_mWMin-0p1_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", (3.*0.1086)*(3.*0.1086), true, true);
 
     InitSMS("T2tt", m_Path+"Summer16_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1., true);
-    InitSMS("T2tt", m_Path+"Summer16_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1., true);
-    InitSMS("T2tt", m_Path+"Summer16_102X_SMS/SMS-T2tt_mStop-400to1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1., true);
-    InitSMS("T2tt", m_Path+"Summer16_102X_SMS/SMS-T2tt_dM-6to8_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1., true);
+    //InitSMS("T2tt", m_Path+"Summer16_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1., true);
+    //InitSMS("T2tt", m_Path+"Summer16_102X_SMS/SMS-T2tt_mStop-400to1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1., true);
+    //InitSMS("T2tt", m_Path+"Summer16_102X_SMS/SMS-T2tt_dM-6to8_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1., true);
     //InitSMS("T2tt", m_Path+"Summer16_102X_SMS/SMS-T2tt_dM-10to80_2Lfilter_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", (3.*0.1086)*(3.*0.1086), true, true);
     //InitSMS("T2tt", m_Path+"Summer16_102X_SMS/Summer16_102X_SMS/SMS-T2tt_3J-LH_xqcut-20_top-corridorRefMasses_2Lfilter_TuneCP5_13TeV-madgraphMLM-pythia8_Summer16_102X.root", (3.*0.1086)*(3.*0.1086), false, true);
     
@@ -379,19 +409,43 @@ void SampleTool::InitProcMap(){
     //InitSMS("TChiWZ", m_Path+"Summer16_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1., false, true);
     //InitSMS("TChiWZ", m_Path+"Summer16_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_mC1-325to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1., false, true);
     InitSMS("TChiWZ", m_Path+"Summer16_102X_SMS/TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1., true);
-    InitSMS("TChiWZ", m_Path+"Summer16_102X_SMS/SMS-TChiWZ_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1., true);
+    //InitSMS("TChiWZ", m_Path+"Summer16_102X_SMS/SMS-TChiWZ_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1., true);
     
     //InitSMS("TChipmWW", m_Path+"Summer16_102X_SMS/SMS-TChipmWW_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1., true);
     InitSMS("TChipmWW", m_Path+"Summer16_102X_SMS/SMS-TChipmWW_dM-3to50_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1., true);
     //InitSMS("TChipmWW", m_Path+"Summer16_102X_SMS/SMS-TChipmWW_WWTo2LNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1., true, true);
 
+    InitSMS("N2C1nonDeg", m_Path+"Summer16_102X_SMS/SMS-N2C1-higgsino_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 0.1009); //Only Z decays to charged leptons
+
     InitSMS("TSlepSlep", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 2.77, true);
     InitSMS("TSlepSlep", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Summer16_102X.root", 2.77, true);
-    InitSMS("TSlepSlep", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_mSlep-500To1300_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 2.77, true);
     InitSMS("TSlepSlep", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 2.77, true);
 
-    InitSMS("N2C1", m_Path+"Summer16_102X_SMS/SMS-N2C1-higgsino_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 0.1011, true); //Only Z to leptons
-    InitSMS("N2C1", m_Path+"Summer16_102X_SMS/SMS-N2C1-higgsino_mN2-260to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 0.1011, true);
+    InitSMS("TSlepSlep_mueL", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 2, true);
+    InitSMS("TSlepSlep_mueL", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Summer16_102X.root", 2, true);
+    InitSMS("TSlepSlep_mueL", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 2, true);
+
+    InitSMS("TSlepSlep_mueR", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 2*0.35, true);
+    InitSMS("TSlepSlep_mueR", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Summer16_102X.root", 2*0.35, true);
+    InitSMS("TSlepSlep_mueR", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 2*0.35, true);
+
+    InitSMS("TSlepSlep_muL", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 2., true,false,kSel);
+    InitSMS("TSlepSlep_muL", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Summer16_102X.root", 2., true,false,kSel);
+    InitSMS("TSlepSlep_muL", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 2., true,false,kSel);
+
+    InitSMS("TSlepSlep_muR", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 2*0.35, true,false,kSel);
+    InitSMS("TSlepSlep_muR", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Summer16_102X.root", 2*0.35, true,false,kSel);
+    InitSMS("TSlepSlep_muR", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 2*0.35, true,false,kSel);
+
+    InitSMS("TSlepSlep_eL", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 2., true,false,kSmu);
+    InitSMS("TSlepSlep_eL", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Summer16_102X.root", 2., true,false,kSmu);
+    InitSMS("TSlepSlep_eL", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 2., true,false,kSmu);
+
+    InitSMS("TSlepSlep_eR", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 2*0.35, true,false,kSmu);
+    InitSMS("TSlepSlep_eR", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Summer16_102X.root", 2*0.35, true,false,kSmu);
+    InitSMS("TSlepSlep_eR", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 2*0.35, true,false,kSmu);
+
+    //InitSMS("TSlepSlep", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_mSlep-500To1300_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 2.77, true);
 
     //InitSMS("T2bb", m_Path+"Summer16_102X_SMS/SMS-T2bb_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1., true);
 
@@ -437,6 +491,7 @@ void SampleTool::InitProcMap(){
     Process ttbar("ttbar", kBkg);
     list.clear();
     list += m_Path + "Fall17_102X/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root";
+    //    list += m_Path + "Summer20UL17_102X/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Summer20UL17_102X.root";
     list += m_Path + "Fall17_102X/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root";
     list += m_Path + "Fall17_102X/TTJets_SingleLeptFromTbar_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root";
     list += m_Path + "Fall17_102X/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_Fall17_102X.root";
@@ -447,6 +502,7 @@ void SampleTool::InitProcMap(){
     list += m_Path + "Fall17_102X/TTZToQQ_TuneCP5_13TeV-amcatnlo-pythia8_Fall17_102X.root";
     list += m_Path + "Fall17_102X/ttHToNonbb_M125_TuneCP5_13TeV-powheg-pythia8_Fall17_102X.root";
     list += m_Path + "Fall17_102X/ttHTobb_M125_TuneCP5_13TeV-powheg-pythia8_Fall17_102X.root";
+    //using only ttjets dilept sample for alice low pt elec analysis
     m_Proc[m_iYear][ttbar] = pair<vector<string>,string>(list, "KUAnalysis");
 
     Process ST("ST", kBkg);
@@ -506,6 +562,8 @@ void SampleTool::InitProcMap(){
     list += m_Path + "Fall17_102X/VHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_Fall17_102X.root";
     m_Proc[m_iYear][DB] = pair<vector<string>,string>(list, "KUAnalysis");
 
+/*
+
     Process Wjets("Wjets", kBkg);
     list.clear();
     list += m_Path + "Fall17_102X/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root";
@@ -517,6 +575,21 @@ void SampleTool::InitProcMap(){
     list += m_Path + "Fall17_102X/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root";
     list += m_Path + "Fall17_102X/WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root";
     m_Proc[m_iYear][Wjets] = pair<vector<string>,string>(list, "KUAnalysis");
+
+*/
+
+
+    Process Wjets("Wjets", kBkg);
+    list.clear();
+    list += m_Path + "Fall17_102X/WJetsToLNu_Pt-100To250_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17_102X.root";
+    list += m_Path + "Fall17_102X/WJetsToLNu_Pt-250To400_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17_102X.root";
+    list += m_Path + "Fall17_102X/WJetsToLNu_Pt-400To600_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17_102X.root";
+    list += m_Path + "Fall17_102X/WJetsToLNu_Pt-50To100_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17_102X.root";
+    list += m_Path + "Fall17_102X/WJetsToLNu_Pt-600ToInf_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17_102X.root";
+    m_Proc[m_iYear][Wjets] = pair<vector<string>,string>(list, "KUAnalysis");
+
+
+
 
     Process TB("TB", kBkg);
     list.clear();
@@ -544,34 +617,65 @@ void SampleTool::InitProcMap(){
     // --- Signal --- //
     // -------------- //
 
+    //Special 4bd sample for alice
+    InitSMS("T4bd_TuneCP2",m_Path+"Fall17_102X_SMS/SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root",1,false,false);
+    InitSMS("T4bd_TuneCP5",m_Path+"Fall17_102X_SMS/SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root",1,false,false);
+    InitSMS("T4bd_UL",m_Path+"Summer20UL17_102X_SMS/SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP5_13TeV-madgraphMLM-pythia8_Summer20UL17_102X.root",1,false,false);
+
+ 
+
     InitSMS("T2bW", m_Path+"Fall17_102X_SMS/SMS-T2bW_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
     InitSMS("T2bW", m_Path+"Fall17_102X_SMS/SMS-T2bW_X05_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
     //InitSMS("T2bW", m_Path+"Fall17_102X_SMS/SMS-T2bW_X05_dM-10to80_2Lfilter_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", (3.*0.1086)*(3.*0.1086), true, true);
 
     InitSMS("T2tt", m_Path+"Fall17_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
-    InitSMS("T2tt", m_Path+"Fall17_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
-    InitSMS("T2tt", m_Path+"Fall17_102X_SMS/SMS-T2tt_dM-6to8_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
-    InitSMS("T2tt", m_Path+"Fall17_102X_SMS/SMS-T2tt_mStop-400to1200_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
+    //InitSMS("T2tt", m_Path+"Fall17_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
+    //InitSMS("T2tt", m_Path+"Fall17_102X_SMS/SMS-T2tt_dM-6to8_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
+    //InitSMS("T2tt", m_Path+"Fall17_102X_SMS/SMS-T2tt_mStop-400to1200_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
     //InitSMS("T2tt", m_Path+"Fall17_102X_SMS/SMS-T2tt_dM-10to80_2Lfilter_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", (3.*0.1086)*(3.*0.1086), true, true);
     //InitSMS("T2tt", m_Path+"Fall17_102X_SMS/Fall17_102X_SMS/SMS-T2tt_3J-LH_xqcut-20_top-corridorRefMasses_2Lfilter_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root", (3.*0.1086)*(3.*0.1086), false, true);
     
-    InitSMS("TChiWZ", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true, true);
+    //InitSMS("TChiWZ", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true, true);
     //InitSMS("TChiWZ", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_dM-90to100_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true, true);
-    InitSMS("TChiWZ", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., false, true);
-    InitSMS("TChiWZ", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_mC1-325to1000_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., false, true);
+    //InitSMS("TChiWZ", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., false, true);
+    //InitSMS("TChiWZ", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_mC1-325to1000_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., false, true);
     InitSMS("TChiWZ", m_Path+"Fall17_102X_SMS/TChiWZ_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
     
     InitSMS("TChipmWW", m_Path+"Fall17_102X_SMS/SMS-TChipmWW_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
     InitSMS("TChipmWW", m_Path+"Fall17_102X_SMS/SMS-TChipmWW_WWTo2LNu_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true, true);
     InitSMS("TChipmWW", m_Path+"Fall17_102X_SMS/SMS-TChipmWW_dM-3to50_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
 
+    InitSMS("N2C1nonDeg", m_Path+"Fall17_102X_SMS/SMS-N2C1-higgsino_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 0.1009); //Only Z decays to charged leptons
+
     InitSMS("TSlepSlep", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2.77, true);
     InitSMS("TSlepSlep", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Fall17_102X.root", 2.77, true);
-    InitSMS("TSlepSlep", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_mSlep-500To1300_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2.77, true);
     InitSMS("TSlepSlep", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2.77, true);
 
-    InitSMS("N2C1", m_Path+"Fall17_102X_SMS/SMS-N2C1-higgsino_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 0.1011, true);
-    InitSMS("N2C1", m_Path+"Fall17_102X_SMS/SMS-N2C1-higgsino_mN2-260to500_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 0.1011, true);
+    InitSMS("TSlepSlep_mueL", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2., true);
+    InitSMS("TSlepSlep_mueL", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Fall17_102X.root", 2., true);
+    InitSMS("TSlepSlep_mueL", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2., true);
+
+    InitSMS("TSlepSlep_mueR", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2*0.35, true);
+    InitSMS("TSlepSlep_mueR", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Fall17_102X.root", 2*0.35, true);
+    InitSMS("TSlepSlep_mueR", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2*0.35, true);
+
+    InitSMS("TSlepSlep_muL", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2., true,false,kSel);
+    InitSMS("TSlepSlep_muL", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Fall17_102X.root", 2., true,false,kSel);
+    InitSMS("TSlepSlep_muL", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2., true,false,kSel);
+
+    InitSMS("TSlepSlep_muR", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2*0.35, true,false,kSel);
+    InitSMS("TSlepSlep_muR", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Fall17_102X.root", 2*0.35, true,false,kSel);
+    InitSMS("TSlepSlep_muR", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2*0.35, true,false,kSel);
+
+    InitSMS("TSlepSlep_eL", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2., true,false,kSmu);
+    InitSMS("TSlepSlep_eL", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Fall17_102X.root", 2., true,false,kSmu);
+    InitSMS("TSlepSlep_eL", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2., true,false,kSmu);
+
+    InitSMS("TSlepSlep_eR", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2*0.35, true,false,kSmu);
+    InitSMS("TSlepSlep_eR", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Fall17_102X.root", 2*0.35, true,false,kSmu);
+    InitSMS("TSlepSlep_eR", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2*0.35, true,false,kSmu);
+
+    //InitSMS("TSlepSlep", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_mSlep-500To1300_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2.77, true);
 
     InitSMS("T2bb", m_Path+"Fall17_102X_SMS/SMS-T2bb_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
 
@@ -677,7 +781,7 @@ void SampleTool::InitProcMap(){
     list += m_Path + "Autumn18_102X/DYJetsToLL_M-4to50_HT-100to200_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/DYJetsToLL_M-4to50_HT-200to400_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/DYJetsToLL_M-4to50_HT-400to600_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8_Autumn18_102X.root";
-    list += m_Path + "Autumn18_102X/DYJetsToLL_M-4to50_HT-600toInf_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/DYJetsToLL_M-4to50_HT-600toInf_TuneCP5_PSWeights_13TeV-madgraphMLM-pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/DYJetsToLL_M-50_HT-100to200_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/DYJetsToLL_M-50_HT-1200to2500_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/DYJetsToLL_M-50_HT-200to400_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8_Autumn18_102X.root";
@@ -720,6 +824,9 @@ void SampleTool::InitProcMap(){
     list += m_Path + "Autumn18_102X/VHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_Autumn18_102X.root";
     m_Proc[m_iYear][DB] = pair<vector<string>,string>(list, "KUAnalysis");
 
+
+/*
+
     Process Wjets("Wjets", kBkg);
     list.clear();
     list += m_Path + "Autumn18_102X/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_Autumn18_102X.root";
@@ -731,6 +838,21 @@ void SampleTool::InitProcMap(){
     list += m_Path + "Autumn18_102X/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8_Autumn18_102X.root";
     m_Proc[m_iYear][Wjets] = pair<vector<string>,string>(list, "KUAnalysis");
+
+*/
+
+    Process Wjets("Wjets", kBkg);
+    list.clear();
+    list += m_Path + "Autumn18_102X/WJetsToLNu_Pt-100To250_TuneCP5_13TeV-amcatnloFXFX-pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/WJetsToLNu_Pt-250To400_TuneCP5_13TeV-amcatnloFXFX-pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/WJetsToLNu_Pt-400To600_TuneCP5_13TeV-amcatnloFXFX-pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/WJetsToLNu_Pt-50To100_TuneCP5_13TeV-amcatnloFXFX-pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/WJetsToLNu_Pt-600ToInf_TuneCP5_13TeV-amcatnloFXFX-pythia8_Autumn18_102X.root";
+    m_Proc[m_iYear][Wjets] = pair<vector<string>,string>(list, "KUAnalysis");
+
+
+
+
 
     Process TB("TB", kBkg);
     list.clear();
@@ -759,11 +881,11 @@ void SampleTool::InitProcMap(){
     // -------------- //
 
     InitSMS("T2tt", m_Path+"Autumn18_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1., true);
-    InitSMS("T2tt", m_Path+"Autumn18_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1., true);
-    InitSMS("T2tt", m_Path+"Autumn18_102X_SMS/SMS-T2tt_mStop-400to1200_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1., true);
-    InitSMS("T2tt", m_Path+"Autumn18_102X_SMS/SMS-T2tt_dM-6to8_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1., true);
+    //InitSMS("T2tt", m_Path+"Autumn18_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1., true);
+    //InitSMS("T2tt", m_Path+"Autumn18_102X_SMS/SMS-T2tt_mStop-400to1200_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1., true);
+    //InitSMS("T2tt", m_Path+"Autumn18_102X_SMS/SMS-T2tt_dM-6to8_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1., true);
 
-    InitSMS("TChiWZ", m_Path+"Autumn18_102X_SMS/SMS-TChiWZ_ZToLL_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1., true, true);
+    //InitSMS("TChiWZ", m_Path+"Autumn18_102X_SMS/SMS-TChiWZ_ZToLL_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1., true, true);
     //InitSMS("TChiWZ", m_Path+"Autumn18_102X_SMS/SMS-TChiWZ_ZToLL_dM-90to100_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1., true, true);
     //InitSMS("TChiWZ", m_Path+"Autumn18_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1., false, true);
     //InitSMS("TChiWZ", m_Path+"Autumn18_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_mC1-325to1000_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1., false, true);
@@ -773,14 +895,37 @@ void SampleTool::InitProcMap(){
     InitSMS("TChipmWW", m_Path+"Autumn18_102X_SMS/SMS-TChipmWW_dM-3to50_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1., true);
     //InitSMS("TChipmWW", m_Path+"Autumn18_102X_SMS/SMS-TChipmWW_WWTo2LNu_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1., true, true);
 
+    InitSMS("N2C1nonDeg", m_Path+"Autumn18_102X_SMS/SMS-N2C1-higgsino_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 0.1009); //Only Z decays to charged leptons
+
     InitSMS("TSlepSlep", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 2.77, true);
     InitSMS("TSlepSlep", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Autumn18_102X.root", 2.77, true);
-    InitSMS("TSlepSlep", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_mSlep-500To1300_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 2.77, true);
     InitSMS("TSlepSlep", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 2.77, true);
 
-    InitSMS("N2C1", m_Path+"Autumn18_102X_SMS/SMS-N2C1-higgsino_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 0.1011, true);
-    InitSMS("N2C1", m_Path+"Autumn18_102X_SMS/SMS-N2C1-higgsino_mN2-260to500_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 0.1011, true);
-    InitSMS("N2toC1W", m_Path+"Autumn18_102X_SMS/SMS-N2toC1W-higgsino_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1., true);
+    InitSMS("TSlepSlep_mueL", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 2., true);
+    InitSMS("TSlepSlep_mueL", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Autumn18_102X.root", 2., true);
+    InitSMS("TSlepSlep_mueL", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 2., true);
+
+    InitSMS("TSlepSlep_mueR", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 2*0.35, true);
+    InitSMS("TSlepSlep_mueR", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Autumn18_102X.root", 2*0.35, true);
+    InitSMS("TSlepSlep_mueR", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 2*0.35, true);
+
+    InitSMS("TSlepSlep_muL", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 2., true,false,kSel);
+    InitSMS("TSlepSlep_muL", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Autumn18_102X.root", 2., true,false,kSel);
+    InitSMS("TSlepSlep_muL", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 2., true,false,kSel);
+
+    InitSMS("TSlepSlep_muR", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 2*0.35, true,false,kSel);
+    InitSMS("TSlepSlep_muR", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Autumn18_102X.root", 2*0.35, true,false,kSel);
+    InitSMS("TSlepSlep_muR", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 2*0.35, true,false,kSel);
+
+    InitSMS("TSlepSlep_eL", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 2., true,false,kSmu);
+    InitSMS("TSlepSlep_eL", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Autumn18_102X.root", 2., true,false,kSmu);
+    InitSMS("TSlepSlep_eL", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 2., true,false,kSmu);
+
+    InitSMS("TSlepSlep_eR", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 2*0.35, true,false,kSmu);
+    InitSMS("TSlepSlep_eR", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Autumn18_102X.root", 2*0.35, true,false,kSmu);
+    InitSMS("TSlepSlep_eR", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 2*0.35, true,false,kSmu);
+
+    //InitSMS("TSlepSlep", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_mSlep-500To1300_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 2.77, true);
 
     //InitSMS("T2bb", m_Path+"Autumn18_102X_SMS/SMS-T2bb_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1., true);
 
@@ -818,6 +963,7 @@ std::map<Process, pair<vector<string>,string> > SampleTool::m_Proc[3];
 std::map<Process, bool> SampleTool::m_SProcInit[3]; // checked combined normalizations already?
 std::map<Process, std::map<string,bool> >   SampleTool::m_SProcFS[3]; // FastSim?
 std::map<Process, std::map<string,bool> >   SampleTool::m_SProcDL[3]; // di-lepton filter (ZToLL or dilepton filter);
+std::map<Process, std::map<string,SleptonFlavor> >   SampleTool::m_SProcSlepFlavor[3]; // filter sleptons
 std::map<Process, std::map<string,double> > SampleTool::m_SProcW[3];  // some additional weight to apply
 
 double SampleTool::m_Lumi[3];

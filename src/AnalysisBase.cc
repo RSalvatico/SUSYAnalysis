@@ -1056,14 +1056,18 @@ int AnalysisBase<SUSYNANOBase>::GetSampleIndex(){
   
   int MP = 0;
   int MC = 0;
+  float MC1 = 0;
   int Ngen = nGenPart;
   int PDGID;
   for(int i = 0; i < nGenPart; i++){
     PDGID = fabs(GenPart_pdgId[i]);
     if(PDGID > 1000000 && PDGID < 3000000){
       int mass = int(GenPart_mass[i]+0.5);
+      float massC1 = GenPart_mass[i];
       if(PDGID == 1000022)
 	MC = mass;
+      else if(abs(PDGID) == 1000024)
+	MC1 = massC1;
       else
 	if(mass > MP)
 	  MP = mass;
@@ -1074,10 +1078,22 @@ int AnalysisBase<SUSYNANOBase>::GetSampleIndex(){
   if(m_HashToIndex.count(hash) == 0){
     m_HashToIndex[hash] = m_Nsample;
     m_IndexToSample[m_Nsample]  = std::string(Form("SMS_%d_%d", MP, MC));
-    m_IndexToXsec[m_Nsample]    = m_XsecTool.GetXsec_SMS(m_DataSet, MP);
-    m_IndexToNevent[m_Nsample]  = m_NeventTool.GetNevent_SMS(m_DataSet, m_FileTag, MP, MC);
-    m_IndexToNweight[m_Nsample] = m_NeventTool.GetNweight_SMS(m_DataSet, m_FileTag, MP, MC);
-  
+    //std::cout << "m_DataSet: " << m_DataSet << std::endl;
+    if(m_DataSet.find("N2C1")!=std::string::npos){
+      m_IndexToXsec[m_Nsample]    = m_XsecTool.GetXsec_SMS(m_DataSet, MP*10000+MC1); //Retrieve mass point in the format MP0MC1 (or MP00MC1 if MC1 < 100)
+      //std::cout << "m_IndexToXsec[m_Nsample]: " << m_IndexToXsec[m_Nsample] << std::endl;
+      //std::cout << "MP: " << MP << "  MC1: " << MC1 << std::endl;
+      m_IndexToNevent[m_Nsample]  = m_NeventTool.GetNevent_SMS(m_DataSet, m_FileTag, MP, MC);
+      //std::cout << "m_IndexToNevent[m_Nsample]: " << m_IndexToNevent[m_Nsample] << std::endl;
+      m_IndexToNweight[m_Nsample] = m_NeventTool.GetNweight_SMS(m_DataSet, m_FileTag, MP, MC);
+      //std::cout << "m_IndexToNweight[m_Nsample]: " << m_IndexToNweight[m_Nsample] << std::endl;
+    }
+    else{
+      std::cout << "Here instead" << std::endl;
+      m_IndexToXsec[m_Nsample]    = m_XsecTool.GetXsec_SMS(m_DataSet, MP);
+      m_IndexToNevent[m_Nsample]  = m_NeventTool.GetNevent_SMS(m_DataSet, m_FileTag, MP, MC);
+      m_IndexToNweight[m_Nsample] = m_NeventTool.GetNweight_SMS(m_DataSet, m_FileTag, MP, MC);
+    }
     m_Nsample++;
   }
 
@@ -1089,7 +1105,7 @@ template <>
 double AnalysisBase<SUSYNANOBase>::GetEventWeight(){
   if(IsData())
     return 1.;
-  
+  //std::cout << "genWeight: " << genWeight << std::endl;  
   if(m_IndexToNweight[m_SampleIndex] > 0.){
     if(!m_DoSMS)
       return genWeight*m_IndexToXsec[m_SampleIndex]/m_IndexToNweight[m_SampleIndex];
@@ -1098,9 +1114,12 @@ double AnalysisBase<SUSYNANOBase>::GetEventWeight(){
     //cout << "Xsec " << m_IndexToXsec[m_SampleIndex] << endl;
     //cout << "Nweight " << m_IndexToNweight[m_SampleIndex] << endl;
     //cout << "Filter eff " << m_NeventTool.GetFilterEff(m_DataSet,m_FileTag,luminosityBlock) << endl;
+
     return genWeight*m_IndexToXsec[m_SampleIndex]/m_IndexToNweight[m_SampleIndex]*m_NeventTool.GetFilterEff(m_DataSet,m_FileTag,luminosityBlock);
-  } else
+  } else{
+    //std::cout << "Are we here?" << std::endl;
     return 0.;
+  }
 }
 
 template <>
@@ -1556,19 +1575,19 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET, int id){
   if(!passID)
     return ParticleList();
   
-  if(year == 2017)
-    MET.SetPtEtaPhi(METFixEE2017_pt,0.0,METFixEE2017_phi);
-  else
+  // if(year == 2017)
+  //   MET.SetPtEtaPhi(METFixEE2017_pt,0.0,METFixEE2017_phi);
+  // else
     MET.SetPtEtaPhi(MET_pt,0.0,MET_phi);
   
   deltaMET.SetZ(0.);
   MET += deltaMET;
   
   if(CurrentSystematic() == Systematic("METUncer_UnClust")){
-    if(year == 2017)
-      deltaMET.SetXYZ(delta*METFixEE2017_MetUnclustEnUpDeltaX,
-		      delta*METFixEE2017_MetUnclustEnUpDeltaY, 0.);
-    else
+    // if(year == 2017)
+    //   deltaMET.SetXYZ(delta*METFixEE2017_MetUnclustEnUpDeltaX,
+    // 		      delta*METFixEE2017_MetUnclustEnUpDeltaY, 0.);
+    // else
       deltaMET.SetXYZ(delta*MET_MetUnclustEnUpDeltaX,
 		      delta*MET_MetUnclustEnUpDeltaY, 0.);
     MET += deltaMET;
@@ -1653,7 +1672,8 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetElectrons(){
     // FO baseline criteria
     if(Electron_lostHits[i] == 0 && Electron_convVeto[i]){
 
-      double mva = Electron_mvaFall17V1noIso[i];
+      //double mva = Electron_mvaFall17V1noIso[i];
+      double mva = Electron_mvaFall17V2noIso[i];
       if(year == 2016 || year == 2018)
 	mva = Electron_mvaFall17V2noIso[i];
 
