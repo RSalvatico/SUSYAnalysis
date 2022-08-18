@@ -320,7 +320,7 @@ void WriteScriptConnect(const string& src_name,
   file << "error = "  << log_name << ".err" << endl;
   file << "log = "    << log_name << ".log" << endl;
   file << "Requirements = (Machine != \"red-node000.unl.edu\") && (Machine != \"red-c2325.unl.edu\")" << endl;
-  file << "request_memory = 2 GB" << endl;
+  file << "request_memory = 4 GB" << endl;
   file << "transfer_input_files = /uscms/home/z374f439/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis/csv/METTrigger/Parameters.csv,/uscms/home/z374f439/nobackup/whatever_you_want/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2,"+pwd+"/"+OutputFold+"/../config_BuildFitInput.tgz" << endl;
   file << "should_transfer_files = YES" << endl;
   file << "when_to_transfer_output = ON_EXIT" << endl;
