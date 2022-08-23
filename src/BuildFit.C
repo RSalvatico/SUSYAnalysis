@@ -358,6 +358,7 @@ int main(int argc, char* argv[]) {
   CONFIG.AddCommonSys(cb, processes);
   CONFIG.AddFakeLeptonSys(cb, processes);
   CONFIG.AddSVSys(cb, processes);
+  CONFIG.AddBJetSys(cb, processes);
   CONFIG.AddKinematicSys(cb, processes);
 
   VS Wjets; //removing norm wjets for hierarchy leave VS for later hier call
@@ -372,7 +373,7 @@ int main(int argc, char* argv[]) {
 
   VS ttbar;
   ttbar += "ttbar";
-   CONFIG.AddNormHierarchy( sm, ttbar, cb, processes) ;
+//   CONFIG.AddNormHierarchy( sm, ttbar, cb, processes) ;
    CONFIG.AddSJetNormSys("ttbar", ttbar, cb, processes);
 
   VS QCD;
