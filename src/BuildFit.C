@@ -343,8 +343,8 @@ int main(int argc, char* argv[]) {
   //CONFIG.Configure(cb, processes);
 
   VS bkg_rate;
-//  bkg_rate += "ttbar"; //removing for ttbar hierarchy testing
-//  bkg_rate += "Wjets"; //removing scale wjets for hierarchy
+  bkg_rate += "ttbar"; //removing for ttbar hierarchy testing
+  bkg_rate += "Wjets"; //removing scale wjets for hierarchy
   bkg_rate += "ZDY";
   bkg_rate += "QCD";
   bkg_rate += "DB";
@@ -359,13 +359,16 @@ int main(int argc, char* argv[]) {
   CONFIG.AddFakeLeptonSys(cb, processes);
   CONFIG.AddSVSys(cb, processes);
   CONFIG.AddBJetSys(cb, processes);
+  ProcessList proc_LF_Fakes = proc_fakes;
+  proc_LF_Fakes = proc_LF_Fakes.Filter("f1");
+  CONFIG.AddFakeSSSys(cb, proc_LF_Fakes);
   CONFIG.AddKinematicSys(cb, processes);
 
   VS Wjets; //removing norm wjets for hierarchy leave VS for later hier call
   Wjets += "Wjets";
-  SystDict sm;
-  CONFIG.initSystDict(sm);
-  CONFIG.AddNormHierarchy( sm, Wjets, cb,processes) ;
+  SystDict smW;
+  CONFIG.initSystDictW(smW);
+  CONFIG.AddNormHierarchy( smW, Wjets, cb,processes) ;
 //  cb.PrintSysts();
 //   CONFIG.AddSJetNormSys("Wjets", Wjets, cb, processes);
 
@@ -373,8 +376,11 @@ int main(int argc, char* argv[]) {
 
   VS ttbar;
   ttbar += "ttbar";
-//   CONFIG.AddNormHierarchy( sm, ttbar, cb, processes) ;
-   CONFIG.AddSJetNormSys("ttbar", ttbar, cb, processes);
+  SystDict smtt;
+ // ttbar += "ST";
+   CONFIG.initSystDictTtbar(smtt);
+   CONFIG.AddNormHierarchy( smtt, ttbar, cb, processes) ;
+//   CONFIG.AddSJetNormSys("ttbar", ttbar, cb, processes);
 
   VS QCD;
   QCD += "QCD";
@@ -397,13 +403,21 @@ CONFIG.AddSJetNormSys("Other", Other, cb, processes);
  ZDYDB += "ZDY";
  ZDYDB += "DB";
  CONFIG.AddSJetNormSys("ZDYDB", ZDYDB, cb, processes);
- 
+
  VS STTB;
  STTB += "ST";
  STTB += "TB";
  CONFIG.AddSJetNormSys("STTB", STTB, cb, processes);
- 
+/*
+VS ZDY;
+ZDY += "ZDY";
+CONFIG.AddSJetNormSys("ZDY",ZDY,cb, processes);
 
+VS DB;
+DB += "DB";
+//DBTB += "TB";
+CONFIG.AddSJetNormSys("DB",DB,cb, processes);
+*/
  using ch::syst::SystMap;
   using ch::syst::era;
   using ch::syst::channel;
