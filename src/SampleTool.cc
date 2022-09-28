@@ -417,9 +417,9 @@ void SampleTool::InitProcMap(){
 
     InitSMS("N2C1nonDeg", m_Path+"Summer16_102X_SMS/SMS-N2C1-higgsino_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 0.1009); //Only Z decays to charged leptons
 
-    InitSMS("TSlepSlep", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 2.77, true);
-    InitSMS("TSlepSlep", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Summer16_102X.root", 2.77, true);
-    InitSMS("TSlepSlep", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 2.77, true);
+    //InitSMS("TSlepSlep_tot", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 2.77, true);
+    //InitSMS("TSlepSlep_tot", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Summer16_102X.root", 2.77, true);
+    InitSMS("TSlepSlep_tot", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 2.77, true);
 
     InitSMS("TSlepSlep_mueL", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 2, true);
     InitSMS("TSlepSlep_mueL", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Summer16_102X.root", 2, true);
@@ -649,9 +649,9 @@ void SampleTool::InitProcMap(){
 
     InitSMS("N2C1nonDeg", m_Path+"Fall17_102X_SMS/SMS-N2C1-higgsino_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 0.1009); //Only Z decays to charged leptons
 
-    InitSMS("TSlepSlep", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2.77, true);
-    InitSMS("TSlepSlep", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Fall17_102X.root", 2.77, true);
-    InitSMS("TSlepSlep", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2.77, true);
+    //InitSMS("TSlepSlep_tot", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2.77, true);
+    //InitSMS("TSlepSlep_tot", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Fall17_102X.root", 2.77, true);
+    InitSMS("TSlepSlep_tot", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2.77, true);
 
     InitSMS("TSlepSlep_mueL", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2., true);
     InitSMS("TSlepSlep_mueL", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Fall17_102X.root", 2., true);
@@ -899,9 +899,9 @@ void SampleTool::InitProcMap(){
 
     InitSMS("N2C1nonDeg", m_Path+"Autumn18_102X_SMS/SMS-N2C1-higgsino_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 0.1009); //Only Z decays to charged leptons
 
-    InitSMS("TSlepSlep", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 2.77, true);
-    InitSMS("TSlepSlep", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Autumn18_102X.root", 2.77, true);
-    InitSMS("TSlepSlep", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 2.77, true);
+    //InitSMS("TSlepSlep_tot", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 2.77, true);
+    //InitSMS("TSlepSlep_tot", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Autumn18_102X.root", 2.77, true);
+    InitSMS("TSlepSlep_tot", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 2.77, true);
 
     InitSMS("TSlepSlep_mueL", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 2., true);
     InitSMS("TSlepSlep_mueL", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Autumn18_102X.root", 2., true);

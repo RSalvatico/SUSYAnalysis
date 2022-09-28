@@ -38,6 +38,9 @@ public:
   
   void appSystDict( SystDict& sm , std::string label, std::vector<int> list);
   void initSystDict( SystDict& sm );
+
+  void AddBJetSys(ch::CombineHarvester& cb, ProcessList& processes);
+
 };
 
 #endif

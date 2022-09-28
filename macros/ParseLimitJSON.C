@@ -656,7 +656,7 @@ TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
     if(ptype == kT2bb)
       xsec = g_Xsec.GetXsec_SMS("T2bb", MP);
     if(ptype == kTSlSl)
-      xsec = g_Xsec.GetXsec_SMS("TSlepSlep", MP);
+      xsec = g_Xsec.GetXsec_SMS("TSlepSlep", MP)*2.77;
     
     for(int y = 0; y < Ny; y++){
       if(hist->GetBinContent(x+1,y+1) > 0.){
@@ -685,8 +685,8 @@ TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
   hist->GetZaxis()->SetTitleOffset(1.15);
   hist->GetZaxis()->SetLabelFont(42);
   hist->GetZaxis()->SetLabelSize(0.045);
-  hist->GetXaxis()->SetRangeUser(100.,250.);
-  hist->GetYaxis()->SetRangeUser(50.,250.);
+  hist->GetXaxis()->SetRangeUser(100.,500.);
+  hist->GetYaxis()->SetRangeUser(0.,370.);
   hist->GetZaxis()->SetTitle("95% C.L. cross-section U.L. [fb]");
   hist->Draw("COLZ");
 
@@ -798,7 +798,7 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
     if(ptype == kT2bb)
       xsec = g_Xsec.GetXsec_SMS("T2bb", MP);
     if(ptype == kTSlSl)
-      xsec = g_Xsec.GetXsec_SMS("TSlepSlep", MP);
+      xsec = g_Xsec.GetXsec_SMS("TSlepSlep", MP)*2.77;
     
     for(int y = 0; y < Ny; y++){
       if(hist->GetBinContent(x+1,y+1) > 0.){
@@ -827,8 +827,8 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
   hist->GetZaxis()->SetTitleOffset(1.15);
   hist->GetZaxis()->SetLabelFont(42);
   hist->GetZaxis()->SetLabelSize(0.045);
-  hist->GetXaxis()->SetRangeUser(90.,260.);
-  hist->GetYaxis()->SetRangeUser(0.,70.);
+  hist->GetXaxis()->SetRangeUser(90.,500.);
+  hist->GetYaxis()->SetRangeUser(0.,170.);
   hist->GetZaxis()->SetTitle("95% C.L. cross-section U.L. [fb]");
   hist->Draw("COLZ");
 
