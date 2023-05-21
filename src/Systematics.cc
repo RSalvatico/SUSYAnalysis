@@ -80,7 +80,8 @@ bool Systematic::operator > (const Systematic& sys) const {
 }
 
 std::string Systematic::TreeName(const string& name) const {
-
+  if(m_Label.compare("METUncer_GenMET") == 0)
+    return name+"_"+m_Label;
   if(this->IsDefault())
     return name;
   else
@@ -320,11 +321,9 @@ Systematics SystematicsTool::GetWeightSystematics() const {
   //list += "PU_SF"; // turn off for now
   list += "BTAGHF_SF";
   list += "BTAGLF_SF";
-  //list += "MET_TRIG_0L";
-  //list += "MET_TRIG_1L_el";
-  //list += "MET_TRIG_1L_mu";
-  //list += "MET_TRIG_2L3L_el";
-  //list += "MET_TRIG_2L3L_mu";
+  //list += "MET_TRIG_SF"; // default
+  ////list += "MET_TRIG_el";
+  ////list += "MET_TRIG_mu";
 
   return list;
 }
@@ -361,7 +360,9 @@ Systematics SystematicsTool::GetTreeSystematics() const {
   Systematics list;
   
   list += "JESUncer_Total";
+  list += "JERUncer_Total";
   list += "METUncer_UnClust";
+  list += "METUncer_GenMET";
   // list += "JESUncer_CorrelationGroupMPFInSitu";
   // list += "JESUncer_CorrelationGroupIntercalibration";
   // list += "JESUncer_CorrelationGroupbJES";
@@ -375,6 +376,10 @@ Systematics SystematicsTool::GetTreeSystematics() const {
 
 const Systematics& SystematicsTool::JESSystematics() const {
   return m_JESSys;
+}
+
+const Systematics& SystematicsTool::JERSystematics() const {
+  return m_JERSys;
 }
 
 const Systematics& SystematicsTool::MMSSystematics() const {
@@ -449,8 +454,11 @@ void SystematicsTool::Init(){
   m_MMSSys += "MMSUncer_Total";
   
   m_EESSys += "EESUncer_Total";
+
+  m_JERSys += "JERUncer_Total";
   
   m_METSys += "METUncer_UnClust";
+  m_METSys += "METUncer_GenMET";
   m_METSys.Add(m_JESSys);
 
 }

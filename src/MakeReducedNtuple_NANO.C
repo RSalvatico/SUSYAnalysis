@@ -41,9 +41,11 @@ int main(int argc, char* argv[]) {
   char JSONFile[400];
   char PUFOLD[400];
   char BTAGFOLD[400];
+  char LEPFOLD[400];
   char JMEFOLD[400];
   char SVFILE[400];
   char METTRIGFILE[400];
+  char PREFIREFILE[400];
 
   bool DO_FILE = false;
   bool DO_LIST = false;
@@ -52,12 +54,16 @@ int main(int argc, char* argv[]) {
   bool DO_SMS = false;
   bool DO_JSON = false;
   bool IS_DATA = false;
+  bool IS_FASTSIM = false;
 
   bool DO_SYS = false;
   bool DO_SYS_JES = false;
+  bool DO_SYS_JER = false;
   bool DO_SYS_MET = false;
   bool DO_SYS_MMS = false;
   bool DO_SYS_EES = false;
+
+  bool DO_slim = false;
   
   int ICHUNK = 1;
   int NCHUNK = 1;
@@ -100,15 +106,21 @@ int main(int argc, char* argv[]) {
     if (strncmp(argv[i],"-filtereff",10)==0)   sscanf(argv[i],"-filtereff=%s", FilterEff);
     if (strncmp(argv[i],"-pu",3)==0)   sscanf(argv[i],"-pu=%s", PUFOLD);
     if (strncmp(argv[i],"-btag",5)==0)   sscanf(argv[i],"-btag=%s", BTAGFOLD);
+    if (strncmp(argv[i],"-lep",4)==0)   sscanf(argv[i],"-lep=%s", LEPFOLD);
     if (strncmp(argv[i],"-jme",4)==0)   sscanf(argv[i],"-jme=%s", JMEFOLD);
     if (strncmp(argv[i],"-svfile",7)==0)   sscanf(argv[i],"-svfile=%s", SVFILE);
     if (strncmp(argv[i],"-metfile",8)==0)   sscanf(argv[i],"-metfile=%s", METTRIGFILE);
+    if (strncmp(argv[i],"-prefirefile",12)==0)   sscanf(argv[i],"-prefirefile=%s", PREFIREFILE);
     
     if (strncmp(argv[i],"--sms",5)==0)  DO_SMS = true;
     if (strncmp(argv[i],"--data",6)==0)  IS_DATA = true;
+    if (strncmp(argv[i],"--fastsim",9)==0)  IS_FASTSIM = true;
 
+    if (strncmp(argv[i],"--slim",6)==0) DO_slim = true;
+    
     if (strncmp(argv[i],"--sys",5)==0)  DO_SYS = true;
     if (strncmp(argv[i],"--sysJES",8)==0)  DO_SYS_JES = true;
+    if (strncmp(argv[i],"--sysJER",8)==0)  DO_SYS_JER = true;
     if (strncmp(argv[i],"--sysMET",8)==0)  DO_SYS_MET = true;
     if (strncmp(argv[i],"--sysMMS",8)==0)  DO_SYS_MMS = true;
     if (strncmp(argv[i],"--sysEES",8)==0)  DO_SYS_EES = true;
@@ -178,9 +190,11 @@ int main(int argc, char* argv[]) {
   ntuple->AddFilterEffFile(string(FilterEff));
   ntuple->AddPUFolder(string(PUFOLD));
   ntuple->AddBtagFolder(string(BTAGFOLD));
+  ntuple->AddLepFolder(string(LEPFOLD));
   ntuple->AddJMEFolder(string(JMEFOLD));
   ntuple->AddSVDiscrFile(string(SVFILE));
   ntuple->AddMETTriggerFile(string(METTRIGFILE));
+  ntuple->AddPrefireFile(string(PREFIREFILE));
   #ifdef _CMSSW_
   if(!DO_SMS && !IS_DATA)
     ntuple->AddLHAPDF();
@@ -190,6 +204,8 @@ int main(int argc, char* argv[]) {
     ntuple->AddSystematics();
   if(DO_SYS_JES)
     ntuple->AddJESSystematics();
+  if(DO_SYS_JER)
+    ntuple->AddJERSystematics();
   if(DO_SYS_MET)
     ntuple->AddMETSystematics();
   if(DO_SYS_EES)
@@ -206,8 +222,11 @@ int main(int argc, char* argv[]) {
   if(IS_DATA)
     ntuple->DoData();
 
+  if(IS_FASTSIM)
+    ntuple->DoFastSim();
+
   cout << "writing output with ichunk=" << ICHUNK << " nchunk=" << NCHUNK << endl;
-  ntuple->WriteNtuple(string(outputFileName), ICHUNK, NCHUNK);
+  ntuple->WriteNtuple(string(outputFileName), ICHUNK, NCHUNK, DO_slim);
 
   delete ntuple;
  

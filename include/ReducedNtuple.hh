@@ -17,8 +17,8 @@ public:
 
 private:
   bool m_library_generated;
-  TTree* InitOutputTree(const string& sample);
-  void FillOutputTree(TTree* tree, const Systematic& sys = Systematic::Default());
+  TTree* InitOutputTree(const string& sample, bool do_slim = false);
+  void FillOutputTree(TTree* tree, const Systematic& sys = Systematic::Default(), bool do_slim = false);
 
   void ClearVariables();
 
@@ -44,6 +44,32 @@ private:
   double m_BtagLFSFweight;
   double m_BtagLFSFweight_up;
   double m_BtagLFSFweight_down;
+
+  double m_elIDSFweight;
+  double m_elIDSFweight_up;
+  double m_elIDSFweight_down;
+  double m_elISOSFweight;
+  double m_elISOSFweight_up;
+  double m_elISOSFweight_down;
+  double m_elSIPSFweight;
+  double m_elSIPSFweight_up;
+  double m_elSIPSFweight_down;
+  double m_elVLSFweight;
+  double m_elVLSFweight_up;
+  double m_elVLSFweight_down;
+  double m_muIDSFweight;
+  double m_muIDSFweight_up;
+  double m_muIDSFweight_down;
+  double m_muISOSFweight;
+  double m_muISOSFweight_up;
+  double m_muISOSFweight_down;
+  double m_muSIPSFweight;
+  double m_muSIPSFweight_up;
+  double m_muSIPSFweight_down;
+  double m_muVLSFweight;
+  double m_muVLSFweight_up;
+  double m_muVLSFweight_down;
+  
   double m_MetTrigSFweight;
   double m_MetTrigSFweight_up;
   double m_MetTrigSFweight_down;
@@ -76,12 +102,17 @@ private:
   double m_HT_eta5_id;
   
   bool m_EventFilter;
+  bool m_FastSimEventVeto;
 
   bool m_EventFlag_FailJetID;
   bool m_EventFlag_JetInHEM;
   bool m_EventFlag_JetInHEM_Pt20;
   bool m_EventFlag_JetInHEM_Pt20_JetID;
   bool m_HEM_Veto;
+
+  double m_PrefireWeight;
+  double m_PrefireWeight_up;
+  double m_PrefireWeight_down;
   
   bool m_METtrigger;
   bool m_METHTtrigger;
@@ -113,6 +144,7 @@ private:
   vector<double> m_SIP3D_lep;
   vector<int>    m_ID_lep;
   vector<int>    m_SourceID_lep;
+  vector<int>    m_LepQual_lep;
   vector<int>    m_Index_lep;
 
   int m_Njet;
@@ -278,7 +310,8 @@ private:
   double m_PX3_BoostT;
   double m_MX3a_BoostT;
   double m_MX3b_BoostT;
-  double m_Mperp; 
+  double m_Mperp;
+  double m_gammaT;
 
   double m_PV_BoostT;
   
