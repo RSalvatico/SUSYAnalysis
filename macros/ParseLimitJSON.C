@@ -658,7 +658,7 @@ TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
     if(ptype == kT2bb)
       xsec = g_Xsec.GetXsec_SMS("T2bb", MP);
     if(ptype == kTSlSl)
-      xsec = g_Xsec.GetXsec_SMS("TSlepSlep", MP)*2.77;
+      xsec = g_Xsec.GetXsec_SMS("TSlepSlep", MP)*1.385;
     
     for(int y = 0; y < Ny; y++){
       if(hist->GetBinContent(x+1,y+1) > 0.){
@@ -705,11 +705,11 @@ TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
   l.SetTextAlign(31);
   l.SetTextSize(0.04);
   l.SetTextFont(42);
-  l.DrawLatex(0.8, 0.95, "137 fb^{-1} (13 TeV)");
+  l.DrawLatex(0.8, 0.95, "138 fb^{-1} (13 TeV)");
   l.SetTextAlign(11);
   l.SetTextSize(0.04);
   l.SetTextFont(42);
-  l.DrawLatex(0.16, 0.95,"#bf{#it{CMS}} work-in-progress");
+  l.DrawLatex(0.16, 0.95,"#bf{#it{CMS}} Preliminary");
   l.SetTextSize(0.05);
 
   // SMS info
@@ -738,7 +738,7 @@ TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
   }
   if(ptype == kTSlSl){
     SMS =  "pp #rightarrow #tilde{#it{l}}_{L/R} #tilde{#it{l}}_{L/R}; ";
-    SMS += "#tilde{{#it{l}}_{L/R} #rightarrow #it{l} #tilde{#chi}_{1}^{0}";
+    SMS += "#tilde{#it{l}}_{L/R} #rightarrow #it{l} #tilde{#chi}_{1}^{0}";
   }
 
   l.SetTextSize(0.035);
@@ -802,7 +802,7 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
     if(ptype == kT2bb)
       xsec = g_Xsec.GetXsec_SMS("T2bb", MP);
     if(ptype == kTSlSl)
-      xsec = g_Xsec.GetXsec_SMS("TSlepSlep", MP)*2.77;
+      xsec = g_Xsec.GetXsec_SMS("TSlepSlep", MP)*1.385;
     
     for(int y = 0; y < Ny; y++){
       if(hist->GetBinContent(x+1,y+1) > 0.){
@@ -848,11 +848,11 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
   l.SetTextAlign(31);
   l.SetTextSize(0.04);
   l.SetTextFont(42);
-  l.DrawLatex(0.8, 0.95, "137 fb^{-1} (13 TeV)");
+  l.DrawLatex(0.8, 0.95, "138 fb^{-1} (13 TeV)");
   l.SetTextAlign(11);
   l.SetTextSize(0.04);
   l.SetTextFont(42);
-  l.DrawLatex(0.16, 0.95,"#bf{#it{CMS}} work-in-progress");
+  l.DrawLatex(0.16, 0.95,"#bf{#it{CMS}} Preliminary");
   l.SetTextSize(0.05);
 
   // SMS info
@@ -881,7 +881,7 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
   }
   if(ptype == kTSlSl){
     SMS =  "pp #rightarrow #tilde{#it{l}}_{L/R} #tilde{#it{l}}_{L/R}; ";
-    SMS += "#tilde{{#it{l}}_{L/R} #rightarrow #it{l} #tilde{#chi}_{1}^{0}";
+    SMS += "#tilde{#it{l}}_{L/R} #rightarrow #it{l} #tilde{#chi}_{1}^{0}";
   }
 
   l.SetTextSize(0.035);
