@@ -430,9 +430,9 @@ void SampleTool::InitProcMap(){
     // InitSMS("TSlepSlep_mueR", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Summer16_102X.root", 2*0.35, true);
     InitSMS("TSlepSlep_mueR", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 2*0.35, true);
 
-    InitSMS("TSlepSlep_muLR", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1.385, true,false,kSel);
+    InitSMS("TSlepSlep_muLR", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1.385*2, true,false,kSel);
 
-    InitSMS("TSlepSlep_eLR", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1.385, true,false,kSmu);
+    InitSMS("TSlepSlep_eLR", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1.385*2, true,false,kSmu);
 
     // InitSMS("TSlepSlep_muL", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 2., true,false,kSel);
     // InitSMS("TSlepSlep_muL", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Summer16_102X.root", 2., true,false,kSel);
@@ -667,9 +667,9 @@ void SampleTool::InitProcMap(){
     // InitSMS("TSlepSlep_mueR", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Fall17_102X.root", 2*0.35, true);
     InitSMS("TSlepSlep_mueR", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2*0.35, true);
 
-    InitSMS("TSlepSlep_muLR", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1.385, true,false,kSel);
+    InitSMS("TSlepSlep_muLR", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1.385*2, true,false,kSel);
 
-    InitSMS("TSlepSlep_eLR", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1.385, true,false,kSmu);
+    InitSMS("TSlepSlep_eLR", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1.385*2, true,false,kSmu);
 
     // InitSMS("TSlepSlep_muL", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2., true,false,kSel);
     // InitSMS("TSlepSlep_muL", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Fall17_102X.root", 2., true,false,kSel);
@@ -927,9 +927,9 @@ void SampleTool::InitProcMap(){
     // InitSMS("TSlepSlep_mueR", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Autumn18_102X.root", 2*0.35, true);
     InitSMS("TSlepSlep_mueR", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 2*0.35, true);
 
-    InitSMS("TSlepSlep_muLR", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1.385, true,false,kSel);
+    InitSMS("TSlepSlep_muLR", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1.385*2, true,false,kSel);
 
-    InitSMS("TSlepSlep_eLR", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1.385, true,false,kSmu);
+    InitSMS("TSlepSlep_eLR", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1.385*2, true,false,kSmu);
 
     // InitSMS("TSlepSlep_muL", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 2., true,false,kSel);
     // InitSMS("TSlepSlep_muL", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Autumn18_102X.root", 2., true,false,kSel);

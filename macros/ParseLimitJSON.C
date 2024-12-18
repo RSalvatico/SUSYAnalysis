@@ -33,7 +33,7 @@ double popdouble(std::string& line);
 std::string popstring(std::string& line);
 
 enum LimitType { kObs, kExp, kExpUp, kExpDn };
-enum PlotType { kTChiWZ, kT2tt, kT2bW, kT2bb, kTSlSl, kN2C1};
+enum PlotType { kTChiWZ, kT2tt, kT2bW, kT2bb, kTSlSl, kN2C1, kTSmuLR, kTSeLR, kTSmueL, kTSmueR, kTSmuL, kTSmuR, kTSeL, kTSeR};
 
 TCanvas* Plot2DHist_MCvMP(const string& can, TH2D* hist, PlotType ptype);
 TCanvas* Plot2DHist_dMvMP(const string& can, TH2D* hist, PlotType ptype);
@@ -503,7 +503,8 @@ void ParseLimitJSON(const string& json, TString name, bool inclObs = false, Plot
   ///////////////
   // dM vs. MP //
   ///////////////
-  TH2D*   hist_exp_dM   = limit_def->Get2DHist_dMvMP("h_exp_dM", kExp);
+  //TH2D*   hist_exp_dM   = limit_def->Get2DHist_dMvMP("h_exp_dM", kExp);
+  TH2D*   hist_exp_dM   = limit_def->Get2DHist_dMvMP("", kObs);
   TGraph* gr_exp_dM     = limit_def->Get2DContour_dMvMP(kExp);
   TGraph* gr_exp_dM_up  = limit_def->Get2DContour_dMvMP(kExpUp);
   TGraph* gr_exp_dM_dn  = limit_def->Get2DContour_dMvMP(kExpDn);
@@ -512,39 +513,81 @@ void ParseLimitJSON(const string& json, TString name, bool inclObs = false, Plot
   TCanvas* can_dM = Plot2DHist_dMvMP("can_dM", hist_exp_dM, ptype);
   can_dM->cd();
   
-  gr_exp_dM->SetLineColor(7043);
-  gr_exp_dM->SetLineWidth(5);
-  gr_exp_dM->SetLineStyle(1);
+  //gr_exp_dM->SetLineColor(7043);
+  gr_exp_dM->SetLineColor(kBlack);
+  //gr_exp_dM->SetLineWidth(5);
+  gr_exp_dM->SetLineWidth(4);
+  //gr_exp_dM->SetLineStyle(1);
+  gr_exp_dM->SetLineStyle(7);
   gr_exp_dM->Draw("same C");
 
   gr_exp_dM_up->SetMarkerColor(kWhite);
   gr_exp_dM_up->SetLineColor(7043);
   gr_exp_dM_up->SetLineWidth(4);
   gr_exp_dM_up->SetLineStyle(7);
-  gr_exp_dM_up->Draw("same C");
+  //gr_exp_dM_up->Draw("same C");
   gr_exp_dM_dn->SetMarkerColor(kWhite);
   gr_exp_dM_dn->SetLineColor(7043);
   gr_exp_dM_dn->SetLineWidth(4);
   gr_exp_dM_dn->SetLineStyle(7);
-  gr_exp_dM_dn->Draw("same C");
-  gr_exp_dM_obs->SetMarkerColor(kWhite);
+  //gr_exp_dM_dn->Draw("same C");
+  gr_exp_dM_obs->SetMarkerColor(kBlack);
   gr_exp_dM_obs->SetLineColor(kBlack);
   gr_exp_dM_obs->SetLineWidth(4);
   gr_exp_dM_obs->SetLineStyle(1);
+  // TFile* f = new TFile("limit_eLR_mixed.root","RECREATE");
+  // f->cd();
+  // gr_exp_dM->Write("exp_1");
+  // gr_exp_dM_obs->Write("obs_1");
+  // f->Close();
   
   if(inclObs) gr_exp_dM_obs->Draw("same C");
+
+  TFile* f1 = new TFile("limit_eL_mixed.root","READ");
+  f1->cd();
+  TGraph* gr_exp_1 = (TGraph*)f1->Get("exp_1");
+  TGraph* gr_obs_1 = (TGraph*)f1->Get("obs_1");
+  gr_exp_1->SetMarkerColor(kWhite);
+  gr_exp_1->SetLineColor(kRed);
+  gr_exp_1->SetLineWidth(4);
+  gr_exp_1->SetLineStyle(7);
+  gr_exp_1->Draw("same C");
+  gr_obs_1->SetMarkerColor(kRed);
+  gr_obs_1->SetLineColor(kRed);
+  gr_obs_1->SetLineWidth(4);
+  gr_obs_1->SetLineStyle(1);
+  gr_obs_1->Draw("same C");
+  gPad->RedrawAxis();
+  f1->Close();
+
+  TFile* f2 = new TFile("limit_eR_mixed.root","READ");
+  f2->cd();
+  TGraph* gr_exp_2 = (TGraph*)f2->Get("exp_1");
+  TGraph* gr_obs_2 = (TGraph*)f2->Get("obs_1");
+  gr_exp_2->SetMarkerColor(kWhite);
+  gr_exp_2->SetLineColor(kBlue);
+  gr_exp_2->SetLineWidth(4);
+  gr_exp_2->SetLineStyle(7);
+  gr_exp_2->Draw("same C");
+  gr_obs_2->SetMarkerColor(kBlue);
+  gr_obs_2->SetLineColor(kBlue);
+  gr_obs_2->SetLineWidth(4);
+  gr_obs_2->SetLineStyle(1);
+  gr_obs_2->Draw("same C");
+  gPad->RedrawAxis();
+  f2->Close();
 
   l.SetTextAlign(12);
   l.SetTextSize(0.035);
   l.SetTextFont(42);
-  l.DrawLatex(0.23, 0.83,"expected #pm 1 #sigma_{expm}");
+  //l.DrawLatex(0.23, 0.83,"expected #pm 1 #sigma_{expm}");
   line->SetLineColor(7043);
   line->SetLineWidth(2);
   line->SetLineStyle(1);
-  line->DrawLineNDC(0.18, 0.83, 0.22, 0.83);
+  //line->DrawLineNDC(0.18, 0.83, 0.22, 0.83);
   line->SetLineStyle(3);
-  line->DrawLineNDC(0.18, 0.842, 0.22, 0.842);
-  line->DrawLineNDC(0.18, 0.818, 0.22, 0.818);
+  //line->DrawLineNDC(0.18, 0.842, 0.22, 0.842);
+  //line->DrawLineNDC(0.18, 0.818, 0.22, 0.818);
   
   // l.DrawLatex(0.23, 0.78,"observed");
   // line->SetLineColor(kBlack);
@@ -607,7 +650,7 @@ TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
 //gSystem->Load("/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/lib/libKUEWKino.so");
   TCanvas* can = (TCanvas*) new TCanvas(name.c_str(),name.c_str(),700.,600);
 
-  string xlabel = "m_{P} [GeV]";
+  string xlabel = "m_{#tilde{#it{l}}} [GeV]";
   string ylabel = "m_{#tilde{#chi}^{0}_{1}} [GeV]";
 
   if(ptype == kTChiWZ){
@@ -658,7 +701,23 @@ TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
     if(ptype == kT2bb)
       xsec = g_Xsec.GetXsec_SMS("T2bb", MP);
     if(ptype == kTSlSl)
-      xsec = g_Xsec.GetXsec_SMS("TSlepSlep", MP)*1.385;
+      xsec = g_Xsec.GetXsec_SMS("TSlepSlep", MP)*2.77;
+    if(ptype == kTSmuLR)
+      xsec = g_Xsec.GetXsec_SMS("TSlepSlep", MP)*2.77;
+    if(ptype == kTSeLR)
+      xsec = g_Xsec.GetXsec_SMS("TSlepSlep", MP)*2.77;
+    if(ptype == kTSmueL)
+      xsec = g_Xsec.GetXsec_SMS("TSlepSlep", MP)*2.;
+    if(ptype == kTSmueR)
+      xsec = g_Xsec.GetXsec_SMS("TSlepSlep", MP)*2*0.385;
+    if(ptype == kTSmuL)
+      xsec = g_Xsec.GetXsec_SMS("TSlepSlep", MP)*2.;
+    if(ptype == kTSeL)
+      xsec = g_Xsec.GetXsec_SMS("TSlepSlep", MP)*2.;
+    if(ptype == kTSmuR)
+      xsec = g_Xsec.GetXsec_SMS("TSlepSlep", MP)*2*0.385;
+    if(ptype == kTSeR)
+      xsec = g_Xsec.GetXsec_SMS("TSlepSlep", MP)*2*0.385;
     
     for(int y = 0; y < Ny; y++){
       if(hist->GetBinContent(x+1,y+1) > 0.){
@@ -691,7 +750,7 @@ TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
   hist->GetZaxis()->SetLabelSize(0.045);
   hist->GetXaxis()->SetRangeUser(100.,500.);
   hist->GetYaxis()->SetRangeUser(0.,370.);
-  hist->GetZaxis()->SetTitle("95% C.L. cross-section U.L. [fb]");
+  hist->GetZaxis()->SetTitle("95% CL upper limit [fb]");
   hist->Draw("COLZ");
 
   TLatex l;
@@ -709,7 +768,7 @@ TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
   l.SetTextAlign(11);
   l.SetTextSize(0.04);
   l.SetTextFont(42);
-  l.DrawLatex(0.16, 0.95,"#bf{#it{CMS}} Preliminary");
+  l.DrawLatex(0.15, 0.95,"#bf{CMS} #it{Preliminary}");
   l.SetTextSize(0.05);
 
   // SMS info
@@ -737,8 +796,40 @@ TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
     SMS += "#tilde{b} #rightarrow b #tilde{#chi}_{1}^{0}";
   }
   if(ptype == kTSlSl){
-    SMS =  "pp #rightarrow #tilde{#it{l}}_{L/R} #tilde{#it{l}}_{L/R}; ";
+    SMS =  "pp #rightarrow #tilde{#it{l}^{#pm}}_{L/R} #tilde{#it{l}^{#mp}}_{L/R}; ";
     SMS += "#tilde{#it{l}}_{L/R} #rightarrow #it{l} #tilde{#chi}_{1}^{0}";
+  }
+  if(ptype == kTSmuLR){
+    SMS =  "pp #rightarrow #tilde{#it{#mu}^{#pm}}_{L/R} #tilde{#it{#mu}^{#mp}}_{L/R}; ";
+    SMS += "#tilde{#it{#mu}}_{L/R} #rightarrow #it{#mu} #tilde{#chi}_{1}^{0}";
+  }
+  if(ptype == kTSmueL){
+    SMS =  "pp #rightarrow #tilde{#it{l}^{#pm}}_{L} #tilde{#it{l}^{#mp}}_{L}; ";
+    SMS += "#tilde{#it{l}}_{L} #rightarrow #it{l} #tilde{#chi}_{1}^{0}";
+  }
+  if(ptype == kTSmueR){
+    SMS =  "pp #rightarrow #tilde{#it{l}^{#pm}}_{R} #tilde{#it{l}^{#mp}}_{R}; ";
+    SMS += "#tilde{#it{l}}_{R} #rightarrow #it{l} #tilde{#chi}_{1}^{0}";
+  }
+  if(ptype == kTSmuL){
+    SMS =  "pp #rightarrow #tilde{#it{#mu}^{#pm}}_{L} #tilde{#it{#mu}^{#mp}}_{L}; ";
+    SMS += "#tilde{#it{#mu}}_{L} #rightarrow #it{#mu} #tilde{#chi}_{1}^{0}";
+  }
+  if(ptype == kTSmuR){
+    SMS =  "pp #rightarrow #tilde{#it{#mu}^{#pm}}_{R} #tilde{#it{#mu}^{#mp}}_{R}; ";
+    SMS += "#tilde{#it{#mu}}_{R} #rightarrow #it{#mu} #tilde{#chi}_{1}^{0}";
+  }
+  if(ptype == kTSeLR){
+    SMS =  "pp #rightarrow #tilde{#it{e}^{#pm}}_{L/R} #tilde{#it{e}^{#mp}}_{L/R}; ";
+    SMS += "#tilde{#it{e}}_{L/R} #rightarrow #it{e} #tilde{#chi}_{1}^{0}";
+  }
+  if(ptype == kTSeL){
+    SMS =  "pp #rightarrow #tilde{#it{e}^{#pm}}_{L} #tilde{#it{e}^{#mp}}_{L}; ";
+    SMS += "#tilde{#it{e}}_{L} #rightarrow #it{e} #tilde{#chi}_{1}^{0}";
+  }
+  if(ptype == kTSeR){
+    SMS =  "pp #rightarrow #tilde{#it{e}^{#pm}}_{R} #tilde{#it{e}^{#mp}}_{R}; ";
+    SMS += "#tilde{#it{e}}_{R} #rightarrow #it{e} #tilde{#chi}_{1}^{0}";
   }
 
   l.SetTextSize(0.035);
@@ -750,10 +841,12 @@ TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
 
 TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
 //gSystem->Load("/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/lib/libKUEWKino.so");
+  gPad->SetTicks();
+  gStyle->SetTickLength(0.02,"X");
   TCanvas* can = (TCanvas*) new TCanvas(name.c_str(),name.c_str(),700.,600);
 
-  string xlabel = "m_{P} [GeV]";
-  string ylabel = "m_{P} - M_{ #tilde{#chi}^{0}_{1}} [GeV]";
+  string xlabel = "m_{#tilde{#it{l}}} [GeV]";
+  string ylabel = "m_{#tilde{#it{l}}} - M_{ #tilde{#chi}^{0}_{1}} [GeV]";
 
   if(ptype == kTChiWZ){
     xlabel = "m_{#tilde{#chi}^{#pm}_{1}} [GeV]";
@@ -802,7 +895,23 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
     if(ptype == kT2bb)
       xsec = g_Xsec.GetXsec_SMS("T2bb", MP);
     if(ptype == kTSlSl)
+      xsec = g_Xsec.GetXsec_SMS("TSlepSlep", MP)*2.77;
+    if(ptype == kTSmuLR)
       xsec = g_Xsec.GetXsec_SMS("TSlepSlep", MP)*1.385;
+    if(ptype == kTSeLR)
+      xsec = g_Xsec.GetXsec_SMS("TSlepSlep", MP)*1.385;
+    if(ptype == kTSmueL)
+      xsec = g_Xsec.GetXsec_SMS("TSlepSlep", MP)*2.;
+    if(ptype == kTSmueR)
+      xsec = g_Xsec.GetXsec_SMS("TSlepSlep", MP)*2*0.35;
+    if(ptype == kTSmuL)
+      xsec = g_Xsec.GetXsec_SMS("TSlepSlep", MP)*2.;
+    if(ptype == kTSeL)
+      xsec = g_Xsec.GetXsec_SMS("TSlepSlep", MP)*2.;
+    if(ptype == kTSmuR)
+      xsec = g_Xsec.GetXsec_SMS("TSlepSlep", MP)*2*0.35;
+    if(ptype == kTSeR)
+      xsec = g_Xsec.GetXsec_SMS("TSlepSlep", MP)*2*0.35;
     
     for(int y = 0; y < Ny; y++){
       if(hist->GetBinContent(x+1,y+1) > 0.){
@@ -832,11 +941,22 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
   hist->GetZaxis()->SetTitleOffset(1.15);
   hist->GetZaxis()->SetLabelFont(42);
   hist->GetZaxis()->SetLabelSize(0.045);
-  hist->GetXaxis()->SetRangeUser(90.,500.);
-  hist->GetYaxis()->SetRangeUser(0.,170.);
-  hist->GetZaxis()->SetTitle("95% C.L. cross-section U.L. [fb]");
-  hist->Draw("COLZ");
+  hist->GetXaxis()->SetRangeUser(101,330.);
+  //hist->GetXaxis()->SetRangeUser(101,220.);
+  //hist->GetXaxis()->SetNdivisions(6);
+  hist->GetYaxis()->SetRangeUser(0.,100.);
+  hist->GetZaxis()->SetRangeUser(0.,400.);
+  hist->GetZaxis()->SetTitle("95% CL upper limit [fb]");
 
+  ////New palette
+  int palette[1];
+  palette[0]= 0;
+  //gStyle->SetPalette(1,palette);
+  gStyle->SetPalette(kViridis);
+  //////
+
+  hist->Draw("COLZ");
+  gPad->RedrawAxis();
   TLatex l;
   l.SetTextFont(42);
   l.SetNDC();
@@ -852,7 +972,7 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
   l.SetTextAlign(11);
   l.SetTextSize(0.04);
   l.SetTextFont(42);
-  l.DrawLatex(0.16, 0.95,"#bf{#it{CMS}} Preliminary");
+  l.DrawLatex(0.15, 0.95,"#bf{CMS} #it{Preliminary}");
   l.SetTextSize(0.05);
 
   // SMS info
@@ -880,14 +1000,46 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
     SMS += "#tilde{b} #rightarrow b #tilde{#chi}_{1}^{0}";
   }
   if(ptype == kTSlSl){
-    SMS =  "pp #rightarrow #tilde{#it{l}}_{L/R} #tilde{#it{l}}_{L/R}; ";
+    SMS =  "pp #rightarrow #tilde{#it{l}^{#pm}}_{L/R} #tilde{#it{l}^{#mp}}_{L/R}; ";
     SMS += "#tilde{#it{l}}_{L/R} #rightarrow #it{l} #tilde{#chi}_{1}^{0}";
+  }
+  if(ptype == kTSmuLR){
+    SMS =  "pp #rightarrow #tilde{#it{#mu}^{#pm}}_{L/R} #tilde{#it{#mu}^{#mp}}_{L/R}; ";
+    SMS += "#tilde{#it{#mu}}_{L/R} #rightarrow #it{#mu} #tilde{#chi}_{1}^{0}";
+  }
+  if(ptype == kTSmueL){
+    SMS =  "pp #rightarrow #tilde{#it{l}^{#pm}}_{L} #tilde{#it{l}^{#mp}}_{L}; ";
+    SMS += "#tilde{#it{l}}_{L} #rightarrow #it{l} #tilde{#chi}_{1}^{0}";
+  }
+  if(ptype == kTSmueR){
+    SMS =  "pp #rightarrow #tilde{#it{l}^{#pm}}_{R} #tilde{#it{l}^{#mp}}_{R}; ";
+    SMS += "#tilde{#it{l}}_{R} #rightarrow #it{l} #tilde{#chi}_{1}^{0}";
+  }
+  if(ptype == kTSmuL){
+    SMS =  "pp #rightarrow #tilde{#it{#mu}^{#pm}}_{L} #tilde{#it{#mu}^{#mp}}_{L}; ";
+    SMS += "#tilde{#it{#mu}}_{L} #rightarrow #it{#mu} #tilde{#chi}_{1}^{0}";
+  }
+  if(ptype == kTSmuR){
+    SMS =  "pp #rightarrow #tilde{#it{#mu}^{#pm}}_{R} #tilde{#it{#mu}^{#mp}}_{R}; ";
+    SMS += "#tilde{#it{#mu}}_{R} #rightarrow #it{#mu} #tilde{#chi}_{1}^{0}";
+  }
+  if(ptype == kTSeLR){
+    SMS =  "pp #rightarrow #tilde{#it{e}^{#pm}}_{L/R} #tilde{#it{e}^{#mp}}_{L/R}; ";
+    SMS += "#tilde{#it{e}}_{L/R} #rightarrow #it{e} #tilde{#chi}_{1}^{0}";
+  }
+  if(ptype == kTSeL){
+    SMS =  "pp #rightarrow #tilde{#it{e}^{#pm}}_{L} #tilde{#it{e}^{#mp}}_{L}; ";
+    SMS += "#tilde{#it{e}}_{L} #rightarrow #it{e} #tilde{#chi}_{1}^{0}";
+  }
+  if(ptype == kTSeR){
+    SMS =  "pp #rightarrow #tilde{#it{e}^{#pm}}_{R} #tilde{#it{e}^{#mp}}_{R}; ";
+    SMS += "#tilde{#it{e}}_{R} #rightarrow #it{e} #tilde{#chi}_{1}^{0}";
   }
 
   l.SetTextSize(0.035);
   l.SetTextFont(42);
-  l.DrawLatex(0.18, 0.87,SMS.c_str());
-  
+  //l.DrawLatex(0.45, 0.87,SMS.c_str());
+  gPad->RedrawAxis();
   return can;
 }
 
